@@ -1,0 +1,1 @@
+pulating large numbers of items possibly extracted from far larger datasets discoveries decisions, or explanations patterns (trend, cluster, gap, outlier...), groups of items, or individual items.
