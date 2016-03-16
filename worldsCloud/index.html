@@ -3,48 +3,115 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>JS Bin</title>
+  <title>INFOVIS | word cloud</title>
 </head>
 <body>
+  <div style="width:100%; float: left;">
+    <div style="width:45%; float: left;">
+      <textarea id="text" rows="30" cols="50">pulating large numbers of items possibly extracted from far larger datasets discoveries decisions, or explanations patterns (trend, cluster, gap, outlier...), groups of items, or individual items.</textarea>
+      <button onclick="drawCloud();">dibujar nube</button>
+    </div>
+    <div id="container" style="width:45%; float: left;"></div>
+  </div>
+  
+  
  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script> 
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+ <script src="https://jardindesconnaissances.googlecode.com/svn-history/r82/trunk/public/js/d3.layout.cloud.js"></script>
+
 <script>
-var data = 'pulating large numbers of items possibly extracted from far larger datasets discoveries decisions, or explanations patterns (trend, cluster, gap, outlier...), groups of items, or individual items.';
 
-var words = data.split(/[\s,\.\)\(]+/);
+function groupWords(words){
+  var wordArrayMap = [];
 
-var json = [];
-
-function getElem(json, aWord){
- for(var i=0; i<json.length; i++){
-  if(json[i].word == aWord){
-   return json[i];
-  }
- }
- return undefined;
+  $(words).map(
+    function(){
+      if(wordArrayMap[this]==undefined){
+        wordArrayMap[this]=0;
+      }
+      wordArrayMap[this]++;
+    }
+  );  
+  return wordArrayMap;
 }
 
-$(words).each(
- function(){
-  var elem = getElem(json,this);
-  if(elem==undefined){
-   json.push({word: this+'', count: 1})
-  }else{
-   elem.count++;
+function numberOfMaxRepeatedWord(wordArrayMap){
+  var maxRepetition = 1;
+  for(aWord in wordArrayMap){
+    if(wordArrayMap[aWord]>maxRepetition){
+      maxRepetition=wordArrayMap[aWord];
+    }
   }
- }
-);
+  return maxRepetition;
+}
+
+function prepareData(wordArrayMap, maxRepetition){
+  var json = new Array(); 
+  for(aWord in wordArrayMap){
+    json.push(
+      {
+        text: aWord, 
+        size: 10+wordArrayMap[aWord+'']/maxRepetition*50
+      }
+    );
+  }
+  return json;
+}
+
+function draw(words) {
+    d3.select("#container").append("svg")
+        .attr("width", 300)
+        .attr("height", 300)
+      .append("g")
+        .attr("transform", "translate(150,150)")
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+  }
+
+  function getData(){
+    return $('#text').val().split(/[\s,\.\)\(]+/);
+  }
+
+  var fill = d3.scale.category20();
+
+  function drawCloud(){
+
+    $('#container').empty();
+    var words = getData();
+
+    var wordArrayMap = groupWords(words);
+
+    var maxRepetition = numberOfMaxRepeatedWord(wordArrayMap);
+
+    var json = prepareData(wordArrayMap, maxRepetition);
 
 
-/*
+    
 
-d3.select("body").selectAll("p")
-.data(json)
-.enter()
-.append("p")
-.text("a");
+      d3.layout.cloud().size([300, 300])
+          .words(json)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", draw)
+          .start();
+  }
 
-*/
+
+
+  
+
+
+
 
 </script>
 </body>
