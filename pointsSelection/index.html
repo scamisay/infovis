@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>INFOVIS | points selection</title>
+</head>
+<body>
+
+ <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+
+
+<script>
+
+var width = 500;
+var height = 500;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var r = 4;
+
+drawPoints(100);
+
+var drag = d3.behavior.drag().on("dragstart", function( d, i) {
+    var selection = d3.selectAll( '.selected');
+
+    if( selection[0].indexOf( this)==-1) {
+        selection.classed( "selected", false);
+        selection = d3.select( this);
+        selection.classed( "selected", true);
+    } 
+
+
+    selection.attr("transform", function( d, i) {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        return "translate(" + [ d.x,d.y ] + ")"
+    })
+
+    console.log(1);
+
+    //     // reappend dragged element as last 
+    //     // so that its stays on top 
+    // this.parentNode.appendChild( this);
+    // d3.event.sourceEvent.stopPropagation();
+});
+svg.call(drag);
+
+
+
+function drawPoints(n){
+	var points = generatePoints(n);
+	for(var i=0 ; i< points.length; i++ ){
+		var aPoint = points[i];
+		drawPoint(aPoint.x, aPoint.y);
+	}
+}
+
+function drawPoint(x,y){
+	svg.append("circle")
+	.attr("cx", x)
+	.attr("cy", y)
+	.attr("r", r);
+}
+
+function generatePoints(n){
+	var points = [];
+	for(var i = 0; i<n ; i++){
+		points.push(randomPoint());
+	}
+	return points;
+}
+
+function randomPoint(){
+	return {x: randomX(), y: randomY()};
+}
+
+function randomX(){
+	return Math.ceil(Math.random()*width);
+}
+
+function randomY(){
+	return Math.ceil(Math.random()*height);
+}
+
+
+// http://bl.ocks.org/lgersman/5311083
+</script>
+</body>
