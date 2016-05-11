@@ -6,7 +6,16 @@ var url = 'https://docs.google.com/spreadsheets/d/1YVeqOasXT_4cXKVKq1JaeXEl3XbWB
 
 function loadCSV(){
 	var rawData;
-	$.ajax({url: url, async: false, success: function(data){rawData = data;}});
+	$.ajax(
+		{
+			url: url, 
+			async: false, 
+			crossDomain: true,
+			success: function(data){
+				rawData = data;
+			}
+		}
+		);
 	return rawData;
 }
 
@@ -54,6 +63,12 @@ function fetchDataForDateXMealWeight(serie){
                 Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]),
                 coallesce(parseInt(data[serie+'.peso']),"",0)
             ];
+    });
+}
+
+function fetchStackedWeight(serie){
+    return fetchData(function(data){
+        return coallesce(parseInt(data[serie+'.peso']),"",0);
     });
 }
 
