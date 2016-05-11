@@ -3,200 +3,30 @@
 	<meta charset="UTF-8">
 	<title>Datos Personales</title>
 	
-	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <script type="text/javascript" src="utils.js"></script>   
+
+
 
 </head>
 <body>
+
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>	
 
 
+ 
+<script src="graphs.js"></script>    
+
+
+
 <script>
-var url = 'https://docs.google.com/spreadsheets/d/1YVeqOasXT_4cXKVKq1JaeXEl3XbWBkXxh3smlnikDi0/pub?output=csv';
 
-function drawWeightedChart(){
-    $('#container').highcharts({
-        chart: {
-            type: 'scatter',
-            zoomType: 'xy'
-        },
-        title: {
-            text: 'Días versus Peso de colasiones'
-        },
-        subtitle: {
-            text: ''
-        },
-        xAxis: {
-            title: {
-                enabled: true,
-                text: 'fecha'
-            },
-            type: 'datetime',
-            startOnTick: true,
-            endOnTick: true,
-            showLastLabel: true
-        },
-        yAxis: {
-            title: {
-                text: 'peso (g)'
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'left',
-            verticalAlign: 'top',
-            x: 100,
-            y: 70,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-            borderWidth: 1
-        },
-        plotOptions: {
-            scatter: {
-                marker: {
-                    radius: 5,
-                    states: {
-                        hover: {
-                            enabled: true,
-                            lineColor: 'rgb(100,100,100)'
-                        }
-                    }
-                },
-                states: {
-                    hover: {
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x}'[0]+ ' ' +'{point.x}'[8]+' {point.x} , {point.y} g'
-                }
-            }
-        },
-        series: [{
-            name: 'desayuno',
-            color: 'rgba(223, 83, 83, .5)',
-            data: fetchDataForDateXMealWeight('desayuno')
-
-        }, {
-            name: 'almuerzo',
-            color: 'rgba(119, 152, 191, .5)',
-            data: fetchDataForDateXMealWeight('almuerzo')
-        }, {
-            name: 'merienda',
-            color: 'rgba(119, 152, 191, .5)',
-            data: fetchDataForDateXMealWeight('merienda')
-        }, {
-            name: 'cena',
-            color: 'rgba(119, 152, 191, .5)',
-            data: fetchDataForDateXMealWeight('cena')
-        }]
-    });
-}
-
-function drawAreaChart(){
-	$('#container').highcharts({
-        chart: {
-            type: 'area'
-        },
-        title: {
-            text: 'Historic and Estimated Worldwide Population Growth by Region'
-        },
-        subtitle: {
-            text: 'Source: Wikipedia.org'
-        },
-        xAxis: {
-            categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
-            tickmarkPlacement: 'on',
-            title: {
-                enabled: false
-            }
-        },
-        yAxis: {
-            title: {
-                text: 'Billions'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value / 1000;
-                }
-            }
-        },
-        tooltip: {
-            shared: true,
-            valueSuffix: ' millions'
-        },
-        plotOptions: {
-            area: {
-                stacking: 'normal',
-                lineColor: '#666666',
-                lineWidth: 1,
-                marker: {
-                    lineWidth: 1,
-                    lineColor: '#666666'
-                }
-            }
-        },
-        series: [{
-            name: 'Asia',
-            data: [502, 635, 809, 947, 1402, 3634, 5268]
-        }, {
-            name: 'Africa',
-            data: [106, 107, 111, 133, 221, 767, 1766]
-        }, {
-            name: 'Europe',
-            data: [163, 203, 276, 408, 547, 729, 628]
-        }, {
-            name: 'America',
-            data: [18, 31, 54, 156, 339, 818, 1201]
-        }, {
-            name: 'Oceania',
-            data: [2, 2, 2, 6, 13, 30, 46]
-        }]
-    });
-}
-
-function loadCSV(){
-	var rawData;
-	$.ajax({url: url, async: false, success: function(data){rawData = data;}});
-	return rawData;
-}
-
-		//var csv is the CSV file with headers
-function csvJSON(csv){
-
-  var lines=csv.split("\n");
-
-  var result = [];
-
-  var headers=lines[0].split(",");
-
-  for(var i=1;i<lines.length;i++){
-
-	  var obj = {};
-	  var currentline=lines[i].split(",");
-
-	  for(var j=0;j<headers.length;j++){
-		  obj[headers[j]] = currentline[j];
-	  }
-
-	  result.push(obj);
-
-  }
-  
-  //return result; //JavaScript object
-  return JSON.stringify(result); //JSON
-}
-
-function loadData(){
-	return eval(csvJSON(loadCSV()));
-}
 //http://www.highcharts.com/demo/area-stacked/dark-unica
 
+/*
 var data = loadData();
 
 function fetchData(formatter) {
@@ -211,7 +41,7 @@ function fetchDataForDateXMealWeight(serie){
     return fetchData(function(data){
         var dateStr = data.fecha.split('/');
         return [
-                Date.UTC(dateStr[2],dateStr[1],dateStr[0]),
+                Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]),
                 coallesce(parseInt(data[serie+'.peso']),"",0)
             ];
     });
@@ -224,7 +54,7 @@ function coallesce(value, nullValueCondition, sustitutionValue) {
         return value;
     }
 }
-
+*/
 
 //http://jsfiddle.net/gh/get/jquery/1.9.1/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/line-time-series/
 //https://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?
