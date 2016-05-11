@@ -39,3 +39,28 @@ function csvJSON(csv){
 function loadData(){
 	return eval(csvJSON(loadCSV()));
 }
+
+function fetchData(formatter) {
+   return $(loadData()).map(
+    function(){
+        return [formatter(this)];
+    });
+}
+
+function fetchDataForDateXMealWeight(serie){
+    return fetchData(function(data){
+        var dateStr = data.fecha.split('/');
+        return [
+                Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]),
+                coallesce(parseInt(data[serie+'.peso']),"",0)
+            ];
+    });
+}
+
+function coallesce(value, nullValueCondition, sustitutionValue) {
+    if(value == nullValueCondition){
+        return sustitutionValue;
+    }else{
+        return value;
+    }
+}
