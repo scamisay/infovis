@@ -46,9 +46,15 @@
 
 <script>
 
-/* comento esta linea porque el crossdomain me impide usarla desde un gist
+/* comento esta linea porque el cross-domain me impide usarla desde un gist
 var data = loadData();
 */
+
+//a falta de cross-domain hago esto
+function loadData(){
+    return data;
+}
+
 drawWeightEvolutionChart('weightEvolutionChart');
 drawAcummelatedMealWeightChart('acummelatedMealWeightChart');
 drawDateXHourXMealWeightChart('dateXHourXMealWeightChart');
