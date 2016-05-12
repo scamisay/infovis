@@ -1,7 +1,24 @@
 var url = 'https://docs.google.com/spreadsheets/d/1YVeqOasXT_4cXKVKq1JaeXEl3XbWBkXxh3smlnikDi0/pub?output=csv';
 
 
-
+var series = [
+	{
+		name: 'desayuno',
+		color:'rgba(102,194,165, .5)'
+	},
+	{
+		name: 'almuerzo',
+		color:'rgba(252,141,98, .5)'
+	},
+	{
+		name: 'merienda',
+		color:'rgba(141,160,203, .5)'
+	},
+	{
+		name: 'cena',
+		color:'rgba(231,138,195, .5)'
+	}
+];
 
 
 function loadCSV(){
@@ -61,21 +78,65 @@ function fetchDataForDateXMealWeight(serie){
         var dateStr = data.fecha.split('/');
         return [
                 Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]),
-                coallesce(parseInt(data[serie+'.peso']),"",0)
+                coallesce(parseFloat(data[serie+'.peso']),"",0)
+            ];
+    });
+}
+
+function fetchWeightEvolution() {
+	return fetchData(function(data){
+        var dateStr = data.fecha.split('/');
+        return [
+                Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]),
+                coallesce(parseFloat(data['peso']),"",'')
             ];
     });
 }
 
 function fetchStackedWeight(serie){
     return fetchData(function(data){
-        return coallesce(parseInt(data[serie+'.peso']),"",0);
+    	var dateStr = data.fecha.split('/');
+        var date = Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]);
+
+        var weight = coallesce(parseFloat(data[serie+'.peso']),"",'');
+
+		if(weight == ''){
+			return [ date, '' ];
+        }else{
+        	return [ date, weight ];
+        }
+
+    });
+}
+
+function fetchDataForDateXHourXMealWeight(serie){
+    return fetchData(function(data){
+        var dateStr = data.fecha.split('/');
+        var date = Date.UTC(dateStr[2],dateStr[1]-1,dateStr[0]);
+
+        var hour = coallesce(parseInt(data[serie+'.hora']),"",0);
+        if(hour < 6 && serie == 'cena'){
+        	hour += 24;
+        }
+
+        var weight = coallesce(parseFloat(data[serie+'.peso']),"",'');
+
+        if(weight == ''){
+			return [ date, '', '' ];
+        }else{
+        	return [ date, hour, weight ];
+        }
     });
 }
 
 function coallesce(value, nullValueCondition, sustitutionValue) {
-    if(value == nullValueCondition){
+    if(value == nullValueCondition || isNaN(value)){
         return sustitutionValue;
     }else{
         return value;
     }
+}
+
+function drawChart(divId, conf){
+	$('#'+divId).highcharts(conf);
 }
