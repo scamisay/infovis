@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Visualizacion de arbolado de CABA</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">		
+		<div class="jumbotron">
+			<h1>MC3</h1>
+			<p>Elegí observar los valores consumidos en relación al termostato. Se analizaron los tres pisos.</p>
+            <p>El challenge fue implementado mediante una aplicación web que consumia el stream con un proceso batch y mostraba la información mediante renderizacion de datos en el cliente.</p>
+            <p><img src="img/app.png" class="img-thumbnail"/></p>
+            <p>Abajo muestro los pisos y sus zonas donde encontramos anomalias</p>
+            <p><img src="img/f1.jpg" class="img-thumbnail"/></p>
+            <p><img src="img/f3.jpg" class="img-thumbnail"/></p>
+		</div>
+
+		<div class="container">
+			<section class="row">
+    			<h2>1. Describe the unusual or unexpected patterns and anomalies you observe in the first two days of streaming data (June 14-15).</h2>
+    			
+    			<p>En el primer piso las zonas 7 y 8 son vecinas, sin embargo presentan valores muy distintos.</p>
+    			<p>En el primer piso la zona 5 se comporta muy distinto al resto de las zonas.</p>
+                <p>No encontré nada fuera de los normal en el segundo piso.</p>
+                <p>En el tercer piso se puede observar dos grupos de zonas térmicas. El grupo uno contiene las zonas 3 y 5, y el grupo dos contiene el resto de las zonas.</p>
+			</section>
+
+			<section class="row">
+    			<h2>2. Which additional sensor did you choose to add? What was the rationale for your selection? Did it provide additional insight?</h2>
+    			<p>Habría que agregar un sensor en la zona 6 del primer piso porque queda un área central sin medir. Además la información de esta zona podría parecerse a la de la zona 5, la cual parece tener cierto aislamiento con respecto a la zona 1 que la contiene.</p>
+			</section>
+
+			<section class="row">
+    			<h2>3. Describe anomalies or unusual events you saw in the last four hours of the data stream.</h2>
+    			<p>El grupo témico uno perece comportarce en forma complementaria al grupo térmico dos. Esto es curioso porque las zonas que componen al grupo uno no son vecinas. Al parecer comparten las mismas variables de entorno.</p>
+                
+                <h3>Grupo Térmico 1</h3>
+                <p><img src="img/z3.png" class="img-thumbnail"/></p>
+                <p><img src="img/z5.png" class="img-thumbnail"/></p>
+
+                <h3>Grupo Térmico 2</h3>
+                <p><img src="img/z1.png" class="img-thumbnail"/></p>
+                <p><img src="img/z2.png" class="img-thumbnail"/></p>
+                <p><img src="img/z6.png" class="img-thumbnail"/></p>
+
+			</section>
+
+            <section class="row">
+                <h2>4. Describe how your team approached the challenge of catching up on events that took place when you were not monitoring the data stream. How could these features be used to help you reconsider recent data in light of new events?</h2>
+                <p>Básicamente usamos la interpolación y el promedio de los dotos que tenemos como estrategia.</p>
+            </section>
+
+            
+            
+
+		</div>
+
+	</div>
+	<script type="text/javascript" source="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
+</body>
+</html>
